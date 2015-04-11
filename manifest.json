@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Bitbucket pull request Submodule Checker",
+  "short_name": "Bitbucket Submodule Checker",
+  "description": "This extension checks Bitbucket pull requests and show information about updated submodules",
+  "version": "1.2",
+  "icons": {
+    "16":  "icons/16.png",
+    "48":  "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "author": "Nikolay Labinskiy aka e-moe",
+  "content_scripts": [
+    {
+      "matches": ["https://bitbucket.org/teamppg/*/diff"],
+      "js": ["src/jquery-2.1.3.min.js", "src/submod-checker.js"]
+    }
+  ]
+}
