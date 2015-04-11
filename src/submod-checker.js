@@ -1,17 +1,24 @@
-if (!String.prototype.supplant) {
-    String.prototype.supplant = function (o) {
-        return this.replace(
-            /\{([^{}]*)\}/g,
-            function (a, b) {
-                var r = o[b];
-                return typeof r === 'string' || typeof r === 'number' ? r : a;
-            }
-        );
-    };
-}
-
 $(function() {
-  var regexp = /diff --git a\/(.*?)\sb\/(?:.*?\n){4,5}@@\s(.*?)\s(.*?)\s@@(?:.*?\n){1,2}\+Subproject commit (.*?)\s/g;
+  var showResults = function(list) {
+        if (Object.keys(list).length) {
+          var $diff = $('#pullrequest-diff'),
+              rows = '',
+              section = '';
+          for (i in list) {
+            if (list.hasOwnProperty(i)) {
+              rows += row_tmpl.supplant({
+                name: list[i][0][0],
+                minus: list[i].length,
+                plus: list[i].length,
+                commit: list[i][0][3]
+              });
+            }
+          }
+          section = section_tmpl.supplant({n: Object.keys(list).length, rows: rows});
+          $diff.prepend(section);
+        }
+      },
+      regexp = /diff --git a\/(.*?)\sb\/(?:.*?\n){4,5}@@\s(.*?)\s(.*?)\s@@(?:.*?\n){1,2}\+Subproject commit (.*?)\s/g;
       commits_url = $('#pr-menu-commits').attr('href'),
       list = [],
       deferreds = [],
@@ -54,25 +61,9 @@ $(function() {
       var checkExist = setInterval(function() {
         if ($('#pullrequest-diff').length) {
           clearInterval(checkExist);
-          if (Object.keys(list).length) {
-            var $diff = $('#pullrequest-diff'),
-                rows = '',
-                section = '';
-            for (i in list) {
-              if (list.hasOwnProperty(i)) {
-                rows += row_tmpl.supplant({
-                  name: list[i][0][0],
-                  minus: list[i].length,
-                  plus: list[i].length,
-                  commit: list[i][0][3]
-                });
-              }
-            }
-            section = section_tmpl.supplant({n: Object.keys(list).length, rows: rows});
-            $diff.prepend(section);
-          }  
+          showResults(list);  
         }
-      });
+      }, 100);
     });
   });
 });
