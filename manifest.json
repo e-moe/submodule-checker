@@ -3,7 +3,7 @@
   "name": "Bitbucket pull request Submodule Checker",
   "short_name": "Bitbucket Submodule Checker",
   "description": "This extension checks Bitbucket pull requests and show information about updated submodules",
-  "version": "1.2",
+  "version": "1.3",
   "icons": {
     "16":  "icons/16.png",
     "48":  "icons/48.png",

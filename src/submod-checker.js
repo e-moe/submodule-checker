@@ -1,5 +1,3 @@
-//todo: sort by date, use latest per submodule, count updates per submodule
-
 if (!String.prototype.supplant) {
     String.prototype.supplant = function (o) {
         return this.replace(
