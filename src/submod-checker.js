@@ -47,9 +47,14 @@ $(function() {
           $diff.prepend(section);
         }
       },
-      commits_url = $('#pr-menu-commits').attr('href');
+      $commits_url = $('#pr-menu-commits'),
+      $menu_tab = $('#pr-menu-diff');
+  // Is it pull request Overview tab with all diffs?
+  if (!$menu_tab.length || !$menu_tab.parent().hasClass('active-tab')) {
+    return;
+  }
 
-  $.get(commits_url, function(commits_html) {
+  $.get($commits_url.attr('href'), function(commits_html) {
     var list = [],
         deferreds = [];
 
