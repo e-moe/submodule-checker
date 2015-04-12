@@ -9,3 +9,14 @@ if (!String.prototype.supplant) {
         );
     };
 }
+
+if (!Array.prototype.first) {
+    Array.prototype.first = function () {
+        var i;
+        for (i in this) {
+            if (this.hasOwnProperty(i)) {
+                return this[i];
+            }
+        }
+    };
+}

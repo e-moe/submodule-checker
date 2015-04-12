@@ -38,18 +38,28 @@ app = {
             }, 100);
         });
     },
-    parseCommit: function (commit, list) {
+    parseData: function (data) {
+        'use strict';
+
+        return {
+            name: data[0],
+            minus: data[1],
+            plus: data[2],
+            commit: data[3]
+        };
+    },
+    parseCommit: function (commit, list, i) {
         'use strict';
         var regexp = /diff --git a\/(.*?)\sb\/(?:.*?\n){4,5}@@\s(.*?)\s(.*?)\s@@(?:.*?\n){1,2}\+Subproject commit (.*?)\s/g,
             match,
             data;
 
         while ((match = regexp.exec(commit)) !== null) {
-            data = match.slice(1);
-            if (list[data[0]] === undefined) {
-                list[data[0]] = [];
+            data = app.parseData(match.slice(1));
+            if (list[data.name] === undefined) {
+                list[data.name] = [];
             }
-            list[data[0]].push(data);
+            list[data.name][i] = data;
         }
 
         return list;
@@ -59,6 +69,7 @@ app = {
         var $diff = $('#pullrequest-diff'),
             rows = '',
             section = '',
+            data,
             i;
 
         if (!Object.keys(list).length || !$diff.length) {
@@ -67,14 +78,16 @@ app = {
 
         for (i in list) {
             if (list.hasOwnProperty(i)) {
+                data = list[i].first();
                 rows += app.tmpl.row.supplant({
-                    name: list[i][0][0],
-                    minus: list[i].length,
+                    name: data.name,
+                    minus: list[i].length, // Number of times submodule was changed within this pull request
                     plus: list[i].length,
-                    commit: list[i][0][3]
+                    commit: data.commit
                 });
             }
         }
+
         section = app.tmpl.section.supplant({n: Object.keys(list).length, rows: rows});
         $diff.prepend(section);
     },
@@ -91,11 +104,11 @@ app = {
         }
 
         $.get($commits_url.attr('href'), function (commits_html) {
-            $(commits_html).find('.hash.execute').each(function () {
+            $(commits_html).find('.hash.execute').each(function (i) {
                 var url = $(this).attr('href') + '/raw';
                 deferreds.push(
                     $.get(url, function (commit_raw) {
-                        list = app.parseCommit(commit_raw, list);
+                        list = app.parseCommit(commit_raw, list, i);
                     })
                 );
             });
