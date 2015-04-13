@@ -1,0 +1,10 @@
+{
+  "name": "bbsubmodcheck",
+  "title": "Bitbucket pull request Submodule Checker",
+  "id": "jid1-u6SrcJR8cbOSdw",
+  "description": "This extension checks Bitbucket pull requests and show information about updated submodules",
+  "author": "Nikolay Labinskiy aka e-moe",
+  "icon": "./data/48.png",
+  "license": "GPL v2",
+  "version": "1.0"
+}
